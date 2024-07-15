@@ -46,7 +46,8 @@ def E_guide(t: ArrayLike, g: ArrayLike) -> float:
     
     return np.sum(sqr)
 
-def E_hist(t: ArrayLike, H_d: ArrayLike)
+def E_hist(t: ArrayLike, H_d: ArrayLike):
+    return
 
 
 def HoCS(shape: ArrayLike, n_bins: int=20) -> ArrayLike:
