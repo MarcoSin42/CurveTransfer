@@ -26,7 +26,8 @@ def HistMatch(e: ArrayLike, g: ArrayLike, max_iter=30, w1:float = 0.025, w2:floa
 
 
 def E_guide(t: ArrayLike, g: ArrayLike) -> float:
-    """An implementation of eq(4)
+    """ Energy minimization function to ensure that the overall shape of t and g remain the same
+    An implementation of eq(4) in Edy Technical report in docs
     
     Args:
         t (ArrayLike): An N-length array of 2-D points representing the guide curve
@@ -44,12 +45,13 @@ def E_guide(t: ArrayLike, g: ArrayLike) -> float:
     sqr = np.square(norm)
     
     return np.sum(sqr)
-    
+
+def E_hist(t: ArrayLike, H_d: ArrayLike)
 
 
 def HoCS(shape: ArrayLike, n_bins: int=20) -> ArrayLike:
     """Return the curvature of histogram of a given closed shape represented by some polyline as described in the following paper
-    https://www.dgp.toronto.edu/~egarfink/Edy_Technical_report.pdf
+    Implementation of eq(1,2) in Edy Technical report in docs
 
     Args:
         shape (ArrayLike): A polyline curve.  A nx2 array of points where  each row is a 2-d point
@@ -62,13 +64,13 @@ def HoCS(shape: ArrayLike, n_bins: int=20) -> ArrayLike:
     N: int = shape.shape[0]
     
     # The i-th vector
-    v_i = lambda i: shape[(i + 1) % N] - shape[i % N]
+    v_i = lambda i: shape[(i + 1) % N] - shape[i % N] 
     
-    # Computes the cosine angle between v_i and v_{i+1}
-    theta_i = lambda i: np.arccos(
+    # Computes the cosine angle between v_i and v_{i+1} eq(1)
+    theta_i = lambda i: np.arccos( 
         v_i(i).dot(v_i(i+1))/(norm(v_i(i)*norm(v_i(i+1))))
     )
-    # Curvature estimate at point i
+    # Curvature estimate at point i eq(2)
     k_i = lambda i: theta_i(i) / ((norm(v_i(i)) + norm(v_i(i+1)))/2)
     
     data = []
