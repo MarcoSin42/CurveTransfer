@@ -4,7 +4,7 @@ from numpy import histogram
 from numpy.linalg import norm
 
 
-def HistMatch(e: ArrayLike, g: ArrayLike, max_iter=30) -> ArrayLike:
+def HistMatch(e: ArrayLike, g: ArrayLike, max_iter=30, w1:float = 0.025, w2:float = 0.0045) -> ArrayLike:
     """Given a exemplar curve, e, and a guide curve, g.  Return a curve 't', such that
     the histogram of curvature of t matches g and the overall shape resembles e.
 
@@ -18,10 +18,33 @@ def HistMatch(e: ArrayLike, g: ArrayLike, max_iter=30) -> ArrayLike:
     """
     n_bins = 100
     H_d =  HoCS(e, 100)
+    p_k = -w1*np.log(H_d)
+    
     
     
     return np.array()
 
+
+def E_guide(t: ArrayLike, g: ArrayLike) -> float:
+    """An implementation of eq(4)
+    
+    Args:
+        t (ArrayLike): An N-length array of 2-D points representing the guide curve
+        g (ArrayLike): An N-length array of 2-D points representing the target curve
+
+    Returns:
+        float: Euclidean distance square between all points of the target curve and the guide curve
+    """
+    
+    if t.shape != g.shape:
+        raise Exception("Target curve and guide curve are of different dimensions")
+    
+    diff = t - g
+    norm = np.linalg.norm(diff, axis=1)
+    sqr = np.square(norm)
+    
+    return np.sum(sqr)
+    
 
 
 def HoCS(shape: ArrayLike, n_bins: int=20) -> ArrayLike:
