@@ -42,9 +42,10 @@ class TestGeoFunc:
         ])
         k_i = CurvatureIndexer(square)
         v_i = VectorIndexer(square)
+        theta_i = AngleIndexer(square)
         tol = 0.001
         
-        assert(k_i(0))
+        assert(abs(k_i(0) - theta_i(0)/ ((norm(v_i(0)) + norm(v_i(1))) / 2 ) < tol))
 
 if __name__ == '__main__':
     print("Test")
