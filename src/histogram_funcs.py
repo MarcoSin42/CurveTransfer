@@ -45,8 +45,8 @@ def E_guide(t: ArrayLike, g: ArrayLike) -> float:
         raise Exception("Target curve and guide curve are of different dimensions")
     
     diff = t - g
-    norm = np.linalg.norm(diff, axis=1)
-    sqr = np.square(norm)
+    normed = np.linalg.norm(diff, axis=1)
+    sqr = np.square(normed)
     
     return np.sum(sqr)
 
