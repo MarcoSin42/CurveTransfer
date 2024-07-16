@@ -4,6 +4,10 @@ from numpy import histogram
 from numpy.linalg import norm
 
 
+from geo_funcs import VectorIndexer, AngleIndexer, CurvatureIndexer
+ 
+
+
 def HistMatch(e: ArrayLike, g: ArrayLike, max_iter=30, w1:float = 0.025, w2:float = 0.0045) -> ArrayLike:
     """Given a exemplar curve, e, and a guide curve, g.  Return a curve 't', such that
     the histogram of curvature of t matches g and the overall shape resembles e.
@@ -46,8 +50,22 @@ def E_guide(t: ArrayLike, g: ArrayLike) -> float:
     
     return np.sum(sqr)
 
-def E_hist(t: ArrayLike, H_d: ArrayLike):
-    return
+def E_hist(t: ArrayLike, H_d: ArrayLike) -> float:
+    """ Energy minimzation function to ensure that the curvature statististics of t match the desired curve
+    An implemention of eq(5) in Edy Technical report in docs
+
+    Args:
+        t (ArrayLike): The target curve
+        H_d (ArrayLike): The precomputed HoCS of the desired curve
+
+    Returns:
+        float: Overall energy discrepancy
+    """
+    H_t = HoCS(t)
+    
+    
+    
+    return -1.
 
 
 def HoCS(shape: ArrayLike, n_bins: int=20) -> ArrayLike:
@@ -61,21 +79,10 @@ def HoCS(shape: ArrayLike, n_bins: int=20) -> ArrayLike:
     Returns:
         ArrayLike: A 1-D array containing the histogram itself with 'n_bins'
     """
-    
     N: int = shape.shape[0]
-    
-    # The i-th vector
-    v_i = lambda i: shape[(i + 1) % N] - shape[i % N] 
-    
-    # Computes the cosine angle between v_i and v_{i+1} eq(1)
-    theta_i = lambda i: np.arccos( 
-        v_i(i).dot(v_i(i+1))/(norm(v_i(i)*norm(v_i(i+1))))
-    )
-    # Curvature estimate at point i eq(2)
-    k_i = lambda i: theta_i(i) / ((norm(v_i(i)) + norm(v_i(i+1)))/2)
+    k_i = CurvatureIndexer(shape)
     
     data = []
-    
     for i in range(N - 2):
         data.append(k_i(i))
         
